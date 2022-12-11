@@ -4,7 +4,7 @@ module Api
             skip_before_action :verify_authenticity_token, only: [:create, :update, :destroy]
             def index
                 article = Article.all
-              render json: article, status: 200
+              render json: ArticlesRepresenter.new(article).as_json, status: 200
             end
         
             def show
@@ -19,7 +19,8 @@ module Api
             end
             
             def create
-                article = Article.new(article_params)
+                author = Author.create(author_params)
+                article = Article.new(article_params.merge(author_id: author.id))
                 if article.save
                     render json: article, status: 201
                 else 
@@ -67,9 +68,12 @@ module Api
         
             private
             def article_params
-                 params.require(:article).permit(:title, :body, :author)
+                 params.require(:article).permit(:title, :body)
                
               end
+            def author_params
+                params.require(:author).permit(:firstmame, :lastname, :age)
+            end
         end
     end
 end
