@@ -10,13 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_10_180803) do
+ActiveRecord::Schema[7.0].define(version: 2022_12_11_113810) do
   create_table "articles", force: :cascade do |t|
     t.string "title"
     t.string "body"
-    t.string "author"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "author_id"
+    t.index ["author_id"], name: "index_articles_on_author_id"
   end
 
   create_table "authors", force: :cascade do |t|
