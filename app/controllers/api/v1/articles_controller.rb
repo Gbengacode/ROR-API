@@ -3,7 +3,7 @@ module Api
         class ArticlesController < ApplicationController
             skip_before_action :verify_authenticity_token, only: [:create, :update, :destroy]
             def index
-                article = Article.all
+                article = Article.limit(limit).offset(params[:offset])
               render json: ArticlesRepresenter.new(article).as_json, status: 200
             end
         
@@ -67,6 +67,10 @@ module Api
             end
         
             private
+            def limit
+                max_limit = 100
+              [params.fetch(:limit, max_limit).to_i, max_limit].min
+            end
             def article_params
                  params.require(:article).permit(:title, :body)
                
